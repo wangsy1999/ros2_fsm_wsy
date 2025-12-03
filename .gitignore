@@ -73,7 +73,7 @@ checkpoints/
 *.pt
 *.onnx
 *.engine
-*.xml
+
 
 ###############################################################################
 # Isaac Lab / Isaac Gym / MuJoCo
