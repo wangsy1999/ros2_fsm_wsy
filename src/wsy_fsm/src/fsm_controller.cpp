@@ -73,7 +73,26 @@ void FSMController::fsmCmdCallback(const std_msgs::msg::String::SharedPtr msg)
 }
 
 void FSMController::mainLoop()
-{
+{    // ======================================================
+    // Fake Power Control
+    // ======================================================
+    if (!power_on_) {
+        // 发布松力命令，但保持 last_state_ 的 position 不变或置 0
+        interface_protocol::msg::JointCommand cmd;
+        cmd.position = (last_state_.position.size() == joint_num_)
+                        ? last_state_.position
+                        : std::vector<double>(joint_num_, 0.0);
+
+        cmd.velocity.resize(joint_num_, 0.0);
+        cmd.torque.resize(joint_num_, 0.0);
+        cmd.feed_forward_torque.resize(joint_num_, 0.0);
+        cmd.stiffness.resize(joint_num_, 0.0);
+        cmd.damping.resize(joint_num_, 0.0);
+        cmd.parallel_parser_type = 0;
+
+        joint_cmd_pub_->publish(cmd);
+        return;   // 所有 RESET/RUN/ESTOP 均不执行
+    }
     switch (state_) {
         case ControlState::IDLE:
             // 不做任何控制
@@ -131,15 +150,21 @@ void FSMController::onKey(char c)
         case 'i':
             setState(ControlState::IDLE);
             break;
-        case 'r':
+        case 'p':
             setState(ControlState::RESET);
             break;
-        case 'p':
+        case 'r':
             setState(ControlState::RUN);
             break;
         case 'e':
             setState(ControlState::ESTOP);
             break;
+        case '9':   // o = toggle power
+            power_on_ = !power_on_;
+            RCLCPP_WARN(get_logger(), "POWER BUTTON: %s",
+                        power_on_ ? "ON (PD active)" : "OFF (PD=0)");
+            break;
+
         default:
             break;
     }

@@ -58,7 +58,8 @@ private:
     double reset_duration_{2.0};   // s
 
     ControlState state_{ControlState::IDLE};
-    
+    bool power_on_ = false;   // false = 假上电（pd=0）
+
     // ROS 通信
     rclcpp::Subscription<interface_protocol::msg::JointState>::SharedPtr joint_state_sub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr fsm_cmd_sub_;

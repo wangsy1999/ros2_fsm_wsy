@@ -12,6 +12,23 @@ find_package(std_msgs REQUIRED)
 find_package(interface_protocol REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(yaml-cpp REQUIRED)
+set(ONNX_RUNTIME_ROOT "/home/wsy/rl/onnxruntime-linux-x64-1.21.0")
+
+# 包含目录
+include_directories(
+  ${ONNX_RUNTIME_ROOT}/include
+)
+
+# 链接库
+link_directories(
+  ${ONNX_RUNTIME_ROOT}/lib
+)
+
+set(ONNXRUNTIME_LIB
+  ${ONNX_RUNTIME_ROOT}/lib/libonnxruntime.so
+)
+
+
 
 include_directories(
   include
@@ -31,6 +48,9 @@ ament_target_dependencies(fsm_node
   std_msgs
   interface_protocol
   ament_index_cpp
+)
+target_link_libraries(fsm_node
+  ${ONNXRUNTIME_LIB}       # ⭐ 必须链接 ORT
 )
 
 target_link_libraries(fsm_node yaml-cpp)
