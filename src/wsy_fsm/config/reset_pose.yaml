@@ -18,3 +18,59 @@ initial_kd:   [2,2,2,2,1.5,1,
                0,0,0,0,0,
                0,0,0,0,0,
                1]
+onnx_model_path: "/home/wsy/rl/LeggedLab_private/logs/pm01_flat/2025-12-08_15-40-07/exported/policy.onnx"
+
+input_stack_len: 15
+cycle_time: 0.8
+control_dt: 0.02
+
+input_node_name: "obs"
+output_node_name: "actions"
+
+obs_clip: 100.0
+act_clip: 1.0
+
+scale_ang_vel: 1.0
+scale_project_gravity: 1.0
+scale_cmd: 1.0
+scale_dof_pos: 1.0
+scale_dof_vel: 0.005
+scale_last_action: 1.0
+
+# =============================================
+# ✦ ✦ ✦ 下面是 RL policy 的 12 维动作相关参数 ✦ ✦ ✦
+# policy index 顺序，不是硬件 index !
+# =============================================
+
+# action = tanh() * action_scale + default_position
+action_scale: [
+  0.25, 0.25, 0.25, 0.25, 0.25, 0.25,
+  0.25, 0.25, 0.25, 0.25, 0.25, 0.25
+]
+
+default_position: [
+  -0.3, -0.3, 0.0, 0.0, 0.0, 0.0,
+  0.6, 0.6, -0.3, -0.3, 0.0, 0.0
+]
+
+# joint clamp
+joint_clip_upper: [
+  1.5, 1.5, 1.5, 1.5, 1.5, 1.5,
+  1.5, 1.5, 1.5, 1.5, 1.5, 1.5
+]
+
+joint_clip_lower: [
+  -1.5, -1.5, -1.5, -1.5, -1.5, -1.5,
+  -1.5, -1.5, -1.5, -1.5, -1.5, -1.5
+]
+
+# PD parameters used in RUN mode
+run_kp: [
+  150, 150, 150, 150, 200, 200,
+  200, 200, 50, 50, 50, 50
+]
+
+run_kd: [
+  2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+  2.0, 2.0, 2.0, 2.0, 2.0, 2.0
+]

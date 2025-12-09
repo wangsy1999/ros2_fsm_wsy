@@ -27,7 +27,8 @@ public:
 
     /// 每个控制周期在 FSMController::RUN 中调用
     void tick(const interface_protocol::msg::JointState& state);
-
+    bool loadYaml(const std::string& yaml_path);
+    bool init();
     /// 是否成功加载模型 & 参数
     bool isReady() const { return model_loaded_; }
 

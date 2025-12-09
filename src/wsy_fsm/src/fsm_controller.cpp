@@ -33,7 +33,10 @@ FSMController::FSMController()
     reset_module_ = std::make_shared<ResetModule>(this, joint_cmd_pub_, joint_num_, reset_duration_);
     estop_module_ = std::make_shared<EstopModule>(joint_cmd_pub_, joint_num_);
     run_module_   = std::make_shared<RunModule>(this, joint_cmd_pub_, joint_num_);
-
+    run_module_->loadYaml("/home/wsy/rl/ros2_ws/src/wsy_fsm/config/reset_pose.yaml");
+    if (!run_module_->init()) {
+        RCLCPP_ERROR(get_logger(), "RunModule init() failed.");
+    }
     // 加载 YAML
     try {
         std::string yaml_path = "/home/wsy/rl/ros2_ws/src/wsy_fsm/config/reset_pose.yaml";
